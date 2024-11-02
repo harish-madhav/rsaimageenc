@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Encryption and Decryption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="file"], input[type="number"] {
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            color: #555;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Encryption and Decryption with RSA</h1>
+
+    <h2>Encrypt an Image</h2>
+    <form action="/upload_encrypt" method="POST" enctype="multipart/form-data">
+        <label for="key_size">Key Size (e.g., 512, 1024, 2048):</label>
+        <input type="number" name="key_size" min="512" step="512" placeholder="Enter Key Size" required>
+
+        <label for="file">Select Image:</label>
+        <input type="file" name="file" accept="image/*" required>
+
+        <button type="submit">Encrypt and Download</button>
+    </form>
+
+    {% if encryption_time %}
+    <div class="result">
+        <p>Encryption Time: {{ encryption_time }} seconds</p>
+        <a href="{{ url_for('download_file', filename=encrypted_file) }}">Download Encrypted File</a>
+    </div>
+    {% endif %}
+
+    <h2>Decrypt an Encrypted File</h2>
+    <form action="/upload_decrypt" method="POST" enctype="multipart/form-data">
+        <label for="file">Select Encrypted File:</label>
+        <input type="file" name="file" accept=".bin" required>
+
+        <button type="submit">Upload Encrypted File and Get Image</button>
+    </form>
+
+    {% if decryption_time %}
+    <div class="result">
+        <p>Decryption Time: {{ decryption_time }} seconds</p>
+        <a href="{{ url_for('download_file', filename=decrypted_file) }}">Download Decrypted Image</a>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="result" style="color:red;">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+</body>
+</html>
